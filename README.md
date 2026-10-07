@@ -49,7 +49,7 @@ curl localhost:8000/ai/run -H 'Content-Type: application/json' -d '{
 
 - `state` 内按 `TEXT-n:` 前缀拆条批量判（`qn` 对应 `TEXT-n`）；单条文本整个 `state` 视为一条
 - `blocked`：服务端按冻结阈值判定的拦截结论（客户端无需自己实现阈值逻辑）
-- `must_block`：**铁证必拦**（`score ≥ 0.999`）。冻结考卷上 2197 条真实正常流量最高只到 0.9954（安全余量 0.0036），688 条攻击中 45.6% 分数直达此线——`must_block=true` 拦截不依赖误报预算，可直接硬拦；`blocked=true` 但 `must_block=false` 属于预算线拦截（0.2% 误报率内），可按业务选择直接拦或转人工复核
+- `must_block`：**高置信必拦**（`score ≥ 0.95`）。冻结考卷实测：688 条攻击中 96.9% 分数直达此线，正常流量误中率 0.091%（2/2197，为拦截预算线 0.18% 的一半）——`must_block=true` 可放心直接硬拦；`blocked=true` 但 `must_block=false` 属卡线区（约 1% 攻击 + 0.09% 正常），可按业务选择直接拦或转人工复核
 - 并发：HTTP 层全异步，推理按 `GUARD_CONCURRENCY` 路（默认 1）并行、超出排队
 - 可选 `GUARD_TOKEN` 环境变量开启 Bearer 鉴权；`/healthz` 输出实时统计
 
