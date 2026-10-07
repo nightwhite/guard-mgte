@@ -23,8 +23,8 @@ CPU 推理，无需 GPU；一个 Pod 常驻内存约 2G。
 ## 快速开始（Docker）
 
 ```bash
-docker pull ghcr.io/nightwhite/guard-mgte-public:latest
-docker run -p 8000:8000 ghcr.io/nightwhite/guard-mgte-public:latest
+docker pull ghcr.io/nightwhite/guard:latest
+docker run -p 8000:8000 ghcr.io/nightwhite/guard:latest
 
 curl localhost:8000/ai/run -H 'Content-Type: application/json' -d '{
   "model": "typesafe/jev",

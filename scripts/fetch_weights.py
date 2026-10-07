@@ -4,7 +4,7 @@ import json
 import os
 import urllib.request
 
-REPO = os.environ.get("WEIGHTS_REPO", "nightwhite/guard-mgte-public")
+REPO = os.environ.get("WEIGHTS_REPO", "nightwhite/guard-mgte")
 OUT_DIR = os.environ.get("WEIGHTS_OUT", "/app/model")
 
 rel = json.load(urllib.request.urlopen(f"https://api.github.com/repos/{REPO}/releases/latest"))
