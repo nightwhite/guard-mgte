@@ -1,0 +1,5 @@
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch
+transformers==4.49.0
+fastapi
+uvicorn[standard]
