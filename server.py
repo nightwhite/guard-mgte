@@ -92,7 +92,7 @@ async def decide(path: str, request: Request):
         except ValueError:
             idx = 0
         r = scores[min(max(idx, 0), len(scores) - 1)]
-        a = {"noul": r["score"]}
+        a = {"noul": r["score"], "blocked": r["blocked"], "must_block": r["must_block"]}
         if "category" in r:
             a["category"] = r["category"]
             a["category_top3"] = r["category_top3"]

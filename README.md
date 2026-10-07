@@ -39,13 +39,17 @@ curl localhost:8000/ai/run -H 'Content-Type: application/json' -d '{
 
 ```json
 {"success": true, "result": {"result": {"answers": {"q1": {
-  "noul": 0.9985,
-  "category": "prompt_extraction",
-  "category_top3": [["prompt_extraction", 0.921], ["injection", 0.0737], ["none", 0.0015]]
+  "noul": 0.9998,
+  "blocked": true,
+  "must_block": true,
+  "category": "injection",
+  "category_top3": [["injection", 0.9988], ["prompt_extraction", 0.0004], ["none", 0.0002]]
 }}}}}
 ```
 
 - `state` 内按 `TEXT-n:` 前缀拆条批量判（`qn` 对应 `TEXT-n`）；单条文本整个 `state` 视为一条
+- `blocked`：服务端按冻结阈值判定的拦截结论（客户端无需自己实现阈值逻辑）
+- `must_block`：**铁证必拦**（`score ≥ 0.999`）。冻结考卷上 2197 条真实正常流量最高只到 0.9954（安全余量 0.0036），688 条攻击中 45.6% 分数直达此线——`must_block=true` 拦截不依赖误报预算，可直接硬拦；`blocked=true` 但 `must_block=false` 属于预算线拦截（0.2% 误报率内），可按业务选择直接拦或转人工复核
 - 并发：HTTP 层全异步，推理按 `GUARD_CONCURRENCY` 路（默认 1）并行、超出排队
 - 可选 `GUARD_TOKEN` 环境变量开启 Bearer 鉴权；`/healthz` 输出实时统计
 

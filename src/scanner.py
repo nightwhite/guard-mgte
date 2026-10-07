@@ -13,6 +13,8 @@ WHOLE = 3600
 MAXLEN = 1024
 TAU_S, TAU_L = 0.9016, 0.9568
 # 阈值来自冻结考卷 0.2% 误报预算的拟合线，不可手调凑分
+MUST_BLOCK = 0.999
+# 铁证线：考卷 2197 条真实正常流量最高 0.9954（余量 0.0036），688 条攻击中 45.6% 直达此线
 BASE_DEFAULT = "Alibaba-NLP/gte-multilingual-base"
 
 HIT = re.compile(r"忽略|指另|指令|系统|提示词|限制|越狱|扮演|模式|规则|拒绝|复述|原文|导出|权重|logits|蒸馏|训练数据|语料|ignore|system|prompt|jailbreak|DAN|inject|base64|developer mode|unfiltered|bypass|extract|dump|reveal")
@@ -58,6 +60,7 @@ class Scanner:
             probs = [max(q[j] for q in per) for j in range(len(self.cats))]
         tau = TAU_S if len(text) < 900 else TAU_L
         out = {"score": round(s, 4), "blocked": s >= tau or l0_hit(text), "len": len(text)}
+        out["must_block"] = s >= MUST_BLOCK
         ranked = sorted(zip(self.cats, probs), key=lambda x: -x[1])[:3]
         out["category"] = ranked[0][0]
         out["category_top3"] = [[c, round(p, 4)] for c, p in ranked]
